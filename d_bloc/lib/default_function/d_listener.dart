@@ -3,8 +3,9 @@ import 'package:d_bloc/state/d_state.dart';
 import 'package:flutter/cupertino.dart';
 
 /// T is Type of return Data
+/// E is Type of Error
 
-void Function(BuildContext, BlocState) dListener<T,E>({
+void Function(BuildContext, BlocState) dListener<T, E>({
   void Function(BuildContext context)? onLoading,
   void Function(BuildContext context, T data)? onSuccess,
   void Function(BuildContext context, E error)? onError,
@@ -12,6 +13,10 @@ void Function(BuildContext, BlocState) dListener<T,E>({
   void Function(BlocState state)? otherwise,
 }) =>
     (context, BlocState state) {
+      bool isHasLoading = false;
+      if (state is LoadingState) {
+        isHasLoading = true;
+      }
       if (state is LoadingState) {
         return (onLoading != null)
             ? onLoading(context)
@@ -19,7 +24,7 @@ void Function(BuildContext, BlocState) dListener<T,E>({
       }
       (onStateChange != null)
           ? onStateChange(context)
-          : DefaultListenerConfig.onStateChange(context);
+          : (isHasLoading ? DefaultListenerConfig.onStateChange(context) : null);
       if (state is SuccessState) {
         return (onSuccess != null) ? onSuccess(context, state.data as T) : null;
       }

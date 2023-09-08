@@ -1,7 +1,13 @@
+import 'package:d_bloc/d_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:test_bloc/example/zdt_cubit.dart';
-import 'package:d_bloc/default_function/d_builder.dart';
+
+import 'example/feature/test/widget/detail_screen.dart';
+import 'example/feature/test/test_cubit.dart';
+import 'example/feature/test/widget/lorem_item.dart';
+import 'example/main_screen.dart';
+import 'example/model/exception.dart';
+import 'example/model/lorem.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +25,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: BlocProvider(
-          create: (context) => ZDTCubit(),
+          create: (context) => TestCubit(),
           child: const MyHomePage(title: 'Flutter Demo Home Page')),
     );
   }
@@ -37,35 +43,16 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    final watch = context.read<ZDTCubit>();
+    final watch = context.read<TestCubit>();
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      // body: switch (watch.state) {
-      //   InitialState() => Container(),
-      //   LoadingState() => const Center(
-      //       child: Text("Loading"),
-      //     ),
-      //   SuccessState successState => Center(
-      //       child: Text(successState.data as String),
-      //     ),
-      //   ErrorState() => Container(),
-      // },
-      body: BlocBuilder(
-          bloc: watch,
-          builder: dBuilder<String, Object>(
-            onSuccess: (data) {
-              return Container();
-            },
-            onError: (error) {
-              return Center(child: Text(error.toString()));
-            },
-          )),
+      body: BlocProvider.value(value: watch, child: const MainScreen()),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
-          watch.changeMapStyle();
+          watch.getDataFromServer();
         },
       ),
     );
