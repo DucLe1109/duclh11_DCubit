@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:test_bloc/example/zdt_cubit.dart';
-import 'package:test_bloc/state/bloc_state.dart';
+import 'package:d_bloc/default_function/d_builder.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,22 +37,33 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    final watch = context.watch<ZDTCubit>();
+    final watch = context.read<ZDTCubit>();
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: switch (watch.state) {
-        InitialState() => Container(),
-        LoadingState() => const Center(
-            child: Text("Loading"),
-          ),
-        SuccessState successState => Center(
-            child: Text(successState.data as String),
-          ),
-        ErrorState() => Container(),
-      },
+      // body: switch (watch.state) {
+      //   InitialState() => Container(),
+      //   LoadingState() => const Center(
+      //       child: Text("Loading"),
+      //     ),
+      //   SuccessState successState => Center(
+      //       child: Text(successState.data as String),
+      //     ),
+      //   ErrorState() => Container(),
+      // },
+      body: BlocBuilder(
+          bloc: watch,
+          builder: dBuilder<String, Object>(
+            onSuccess: (data) {
+              return Container();
+            },
+            onError: (error) {
+              return Center(child: Text(error.toString()));
+            },
+          )),
       floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
         onPressed: () {
           watch.changeMapStyle();
         },

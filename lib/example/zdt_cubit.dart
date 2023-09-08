@@ -1,16 +1,19 @@
-import 'package:test_bloc/cubit/m_cubit.dart';
-import 'package:test_bloc/state/bloc_state.dart';
+import 'package:d_bloc/cubit/d_cubit.dart';
+import 'package:d_bloc/state/d_state.dart';
 
-class ZDTCubit extends MCubit {
+class ZDTCubit extends DCubit {
   void changeMapStyle() {
-    handleWithAsyncAction(() async {
-      Future.delayed(
-        const Duration(seconds: 3),
-        () {
-          String hello = "Hello Duclh11";
-          emit(SuccessState(hello));
-        },
-      );
-    }, showLoading: true);
+    executeAsyncAction(
+      () async {
+        Future.delayed(
+          const Duration(seconds: 3),
+          () {
+            String hello = "Hello Duclh11";
+            // emit(const SuccessState(data: "Nguyen Van Dong"));
+          },
+        );
+        throw Exception("Loi roi");
+      },
+    );
   }
 }
